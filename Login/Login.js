@@ -15,7 +15,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { AsyncStorage } from 'react-native';
 import axios from 'axios';
-
+import Loader from './../Component/Loader';
 
 class Login extends Component {
 
@@ -121,18 +121,7 @@ class Login extends Component {
       <LinearGradient colors={['#e5e5e5', '#e5e5e5']} style={styles.linearGradient}>
         <View style={styles.content}>
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-          >
-            <View style={{ marginTop: 22 }}>
-              <View>
-                <Spinner color='blue' />
-              </View>
-
-            </View>
-          </Modal>
+          <Loader visible={modalVisible}/>
 
           <Form>
             <FormItem floatingLabel>

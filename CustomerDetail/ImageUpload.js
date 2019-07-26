@@ -1,5 +1,5 @@
-import React, { Platform,Component } from 'react';
-import { View, StyleSheet, FlatList, Image } from 'react-native';
+import React, { Component } from 'react';
+import { Alert,View, StyleSheet, FlatList, Image } from 'react-native';
 import {
     Button,
     Text,
@@ -7,58 +7,97 @@ import {
 import axios from 'axios';
 import { connect } from 'react-redux';
 import ImagePicker from 'react-native-image-picker';
+import FormData from 'form-data'
+import { isArray } from 'lodash';
+import Loader from './../Component/Loader'
 
 const options = {
     noData: true
 };
 
 class ImageUpload extends Component {
-    state = {
-        'dataSource': []
-    };
+
     constructor(props) {
         super(props);
-
+        this.state = {
+            modalVisible: false,
+            'dataSource': []
+        };
 
     }
+
+    showAlert = (message) => {
+        Alert.alert(
+          message
+        )
+      }
 
     uploadImages = () =>{
         const { baseurl, api_token, formdata } = this.props;
         const { dataSource } = this.state;
+
+  
             
         let config = {
             headers: {
+                'accept': 'application/json',
                 'Authorization': 'Bearer ' + api_token,
-                'Content-Type':'application/json'
             }
         }
 
-        const data = new FormData();
-
-        for(let i in dataSource){
-            data.append("photoes", {
-                name: dataSource[i].fileName,
-                type: dataSource[i].type,
-                uri:
-                  Platform.OS === "android" ? dataSource[i].uri : dataSource[i].uri.replace("file://", "")
-              });
+        if(!isArray(dataSource) ) {
+            this.showAlert('images must be an array'); 
+            return;
         }
 
+        if(dataSource.length > formdata.number_of_photos){
+            this.showAlert('maximum image count '+formdata.number_of_photos); 
+            return;
+        }
 
-        const postData = {
-            'advertisement_id': formdata.id,
-            'photoes':[]
-        };
-        axios.post(baseurl+'/add-advertisement',postData ,config)
-           .then( response => {})
+        const data = new FormData();
+    
+        for(let i in dataSource){
+            data.append("photoes[]",{
+                name: dataSource[i].fileName,
+                type: dataSource[i].type,
+                uri:dataSource[i].uri
+              });
+   
+        }
+
+        
+        data.append("advertisement_id",formdata.id );
+
+        this.setState({ 'modalVisible': true });
+
+        axios.post(baseurl+'/upload-ad-images',data ,config)
+           .then( response => {
+                this.setState({ 'modalVisible': false, dataSource:[]});
+               this.showAlert('images uploaded successfully');
+                
+           })
            .catch(error =>{
 
-           })
+            if(error.response === undefined){
+                this.showAlert("Network Error");
+              }else{
+                if(error.response.status == 400){
+                  this.showAlert("invalid credentials");
+                }else if(error.response.status == 401){
+                    this.showAlert("Authentication failed");
+                    navigate('Login');
+                }else{
+                  this.showAlert("Something went wrong!");
+                }
+              }
+              this.setState({ 'modalVisible': false });
+           });
     }
 
     openGallery = () => {
 
-        const { dataSource } = this.state;
+        const { dataSource, modalVisible } = this.state;
 
         ImagePicker.launchImageLibrary(options, (response) => {
             // Same code as in above section!
@@ -71,10 +110,11 @@ class ImageUpload extends Component {
     }
 
     render() {
-        const { dataSource } = this.state;
-       
+        const { dataSource, modalVisible } = this.state;
+       console.log(modalVisible);
         return (
             <View>
+                <Loader visible={modalVisible}/>
                 {dataSource.map( (row, index) =>{
                     return (<Image key={index} style={styles.imageThumbnail} source={{ uri: row.uri }} />);
                 })}
@@ -109,7 +149,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => ({
     baseurl: state.auth.base_url,
     api_token: state.auth.api_token,
-    formdata: state.formdata,
+    formdata: state.auth.formdata,
 });
 
 export default connect(mapStateToProps)(ImageUpload);

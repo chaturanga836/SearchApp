@@ -22,6 +22,9 @@ const store = createStore(reducers);
 
 const AppNavigator = createStackNavigator({
 
+  ImageUpload: {
+    screen: ImageUpload
+  },
   Login:{
     screen: Login
   },
@@ -30,9 +33,7 @@ const AppNavigator = createStackNavigator({
     screen: Customer
   },
 
-  ImageUpload: {
-    screen: ImageUpload
-  },
+
 });
 
 const AppContainer = createAppContainer(AppNavigator);

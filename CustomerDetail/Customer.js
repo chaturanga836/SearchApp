@@ -12,6 +12,7 @@ import {
     Textarea,
     Spinner,
 } from 'native-base';
+import Loader from './../Component/Loader';
 
 import axios from 'axios';
 
@@ -38,23 +39,21 @@ class Customer extends Component {
                 price_id: ''
             },
    
-            exception: '',
             modalVisible: false,
-            latitude: '',
-            longtitude: '',
+            latitude: '10000',
+            longtitude: '10000',
             category: undefined,
             subCategory: undefined,
             district: undefined,
             city: undefined,
             id: undefined,
-            name: '',
-            address: '',
-            mobile1: '',
-            location: '',
-            owner: '',
-            title: '',
+            name: 'Name',
+            address: '503/A',
+            mobile1: '0757225338',
+            owner: 'Buddhika',
+            title: 'Title1',
             price: undefined,
-            descript: '',
+            descript: 'Descript',
             categories: [],
             subCategories: [],
             districts: [],
@@ -178,7 +177,6 @@ class Customer extends Component {
         axios.post(baseurl+'/add-advertisement',postData ,config)
             .then( response => {
                 this.setState({ 
-                    'exception': '',
                     'modalVisible': false,
                     'latitude': '',
                     'longtitude': '',
@@ -190,7 +188,6 @@ class Customer extends Component {
                     'name': '',
                     'address': '',
                     'mobile1': '',
-                    'location': '',
                     'owner': '',
                     'title': '',
                     'price': undefined,
@@ -220,7 +217,6 @@ class Customer extends Component {
                         this.setState({'formErrors':_formErrors});
                         this.showAlert("invalid credentials");
                     } else {
-                        console.log(error.response);
                         this.showAlert("Internal Error!");
                     }
                 }
@@ -265,7 +261,6 @@ class Customer extends Component {
     }
 
     render() {
-
         const { category, city, subCategory,
             id, name, mobile1,address,
             district, price,
@@ -281,19 +276,7 @@ class Customer extends Component {
         
         return (
             <Content>
-
-<Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-          >
-            <View style={{ marginTop: 22 }}>
-              <View>
-                <Spinner color='blue' />
-              </View>
-
-            </View>
-          </Modal>
+                <Loader visible={modalVisible}/>
 
                 <Form>
                     <FormItem floatingLabel>
