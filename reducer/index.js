@@ -11,7 +11,11 @@ const INITIAL_STATE = {
     subCategories: [],
     cities: [],
     districts: [],
-    prices: []
+    prices: [],
+    formdata:{
+      'id':'',
+      'number_of_photos':0
+    }
 }
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -38,6 +42,13 @@ const authReducer = (state = INITIAL_STATE, action) => {
         newState.api_token = action.data.api_token;
         newState.username = action.data.username;
         newState.password = action.data.password;
+        return newState;
+      }
+
+       case 'SET_FORMDATE': {
+        const newState = cloneDeep(state);
+        newState.formdata.id = action.data.id;
+        newState.formdata.imageCount = action.data.imageCount;
         return newState;
       }
       default:

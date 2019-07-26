@@ -21,6 +21,7 @@ import { createAppContainer,createStackNavigator} from "react-navigation";
 const store = createStore(reducers);
 
 const AppNavigator = createStackNavigator({
+
   Login:{
     screen: Login
   },
@@ -28,9 +29,10 @@ const AppNavigator = createStackNavigator({
   Customer: {
     screen: Customer
   },
+
   ImageUpload: {
     screen: ImageUpload
-  }
+  },
 });
 
 const AppContainer = createAppContainer(AppNavigator);
