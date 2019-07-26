@@ -17,24 +17,21 @@ import { AsyncStorage } from 'react-native';
 import axios from 'axios';
 
 
-
-
-
 class Login extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
-      username: '',
-      password: '',
+      username: 'searchapp001@gmail.com',
+      password: 'redrose2009',
     }
 
 
   }
 
   componentDidMount = () => {
-
+    this.retrieveData();
   }
 
   showAlert = (message) => {
@@ -81,7 +78,7 @@ class Login extends Component {
             'password': password,
             'api_token': response.data.data.api_token
           });
-
+            this.storeData()
           this.setState({ 'modalVisible': false });
           navigate('Customer');
         }

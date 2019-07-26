@@ -124,7 +124,7 @@ class Customer extends Component {
 
     addAvertiesment = () => {
         
-        const { baseurl, api_token } = this.props;
+        const { baseurl, api_token, setFormData } = this.props;
         const { city, district, address, 
             category, mobile1, price, 
             subCategory, owner, descript, 
@@ -198,6 +198,10 @@ class Customer extends Component {
                     'modalVisible': false 
                 });
                 this.showAlert("Successfully Added");
+                setFormData({
+                    'id':response.data.data.id,
+                    'number_of_photos':response.data.data.number_of_photos,
+                });
                 
             })
             .catch(error => {
@@ -216,7 +220,8 @@ class Customer extends Component {
                         this.setState({'formErrors':_formErrors});
                         this.showAlert("invalid credentials");
                     } else {
-                        this.showAlert("Something went wrong!");
+                        console.log(error.response);
+                        this.showAlert("Internal Error!");
                     }
                 }
             });
@@ -255,7 +260,7 @@ class Customer extends Component {
 
     viewImages = () =>{
         const { navigate } = this.props.navigation;
-        navigate('Customer')
+        navigate('ImageUpload');
 
     }
 
@@ -273,11 +278,7 @@ class Customer extends Component {
             prices,
         } = this.state;
 
-        let elem ="";
-        if(id !=""){
-            elem =    <Button primary onPress={() => this.viewImages()}><Text> Submit </Text></Button>
-        }
-
+        
         return (
             <Content>
 
@@ -419,7 +420,7 @@ class Customer extends Component {
                    
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around',}}>
                         <Button primary onPress={() => this.addAvertiesment()}><Text> Submit </Text></Button>
-                        {elem}
+                        <Button primary onPress={() => this.viewImages()}><Text>Images</Text></Button>
                         
                     </View>
               
@@ -447,6 +448,8 @@ const mapStateToProps = state => ({
 
 const EventAction = dispatch => ({
     setEventData: (data) => { dispatch({ type: 'SET_META', data }); },
+    setFormData: (data) => { dispatch({ type: 'SET_FORMDATE', data }); },
+
 });
 
-export default connect(mapStateToProps)(Customer);
+export default connect(mapStateToProps,EventAction)(Customer);
