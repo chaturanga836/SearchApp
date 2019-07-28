@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
-import { Alert, StyleSheet, View, Modal } from 'react-native';
-import {
-  Form,
-  Container,
-  Content,
-  Input,
-  Item as FormItem,
-  Button,
-  Label,
-  Text,
-  Spinner,
-} from 'native-base';
-import LinearGradient from 'react-native-linear-gradient';
+import { Alert, 
+  StyleSheet,
+   View, 
+   Button,
+   Modal ,
+   Text,
+   TextInput,
+   TouchableOpacity,
+
+  } from 'react-native';
+
+//import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-import { AsyncStorage } from 'react-native';
+//import { AsyncStorage } from 'react-native';
 import axios from 'axios';
 import Loader from './../Component/Loader';
 
@@ -23,15 +22,15 @@ class Login extends Component {
     super(props);
     this.state = {
       modalVisible: false,
-      username: 'searchapp001@gmail.com',
-      password: 'redrose2009',
+      username: '',
+      password: '',
     }
 
 
   }
 
   componentDidMount = () => {
-    this.retrieveData();
+    //this.retrieveData();
   }
 
   showAlert = (message) => {
@@ -45,12 +44,12 @@ class Login extends Component {
     const { navigate } = this.props.navigation;
 
     try {
-      const value = await AsyncStorage.getItem('credentials');
-      if (value !== null) {
+      //const value = await AsyncStorage.getItem('credentials');
+      //if (value !== null) {
         // We have data!!
         navigate('Customer')
 
-      }
+      //}
     } catch (error) {
       // Error retrieving data
     }
@@ -78,7 +77,7 @@ class Login extends Component {
             'password': password,
             'api_token': response.data.data.api_token
           });
-            this.storeData()
+            //this.storeData()
           this.setState({ 'modalVisible': false });
           navigate('Customer');
         }
@@ -107,7 +106,7 @@ class Login extends Component {
       const credentials = {
         username, password
       }
-      await AsyncStorage.setItem('credentials', credentials);
+      //await AsyncStorage.setItem('credentials', credentials);
     } catch (error) {
       // Error saving data
     }
@@ -118,31 +117,34 @@ class Login extends Component {
     const { username, password, modalVisible} = this.state;
 
     return (
-      <LinearGradient colors={['#e5e5e5', '#e5e5e5']} style={styles.linearGradient}>
+      
         <View style={styles.content}>
 
           <Loader visible={modalVisible}/>
+          <View>
 
-          <Form>
-            <FormItem floatingLabel>
-              <Label style={styles.lable}>username</Label>
-              <Input placeholder='' value={username} onChangeText={username => this.setState({ 'username': username })} />
-            </FormItem>
-            <Text style={styles.errorFiles}></Text>
+          </View>
 
-            <FormItem floatingLabel >
-              <Label style={styles.lable}>password</Label>
-              <Input placeholder='' secureTextEntry={true} value={password} onChangeText={password => this.setState({ 'password': password })} />
-            </FormItem>
+          <View>
+            <View>
+              <TextInput style={styles.inputFilds} placeholder='username' value={username} onChangeText={username => this.setState({ 'username': username })} />
+            </View>
+            
 
-            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around',}}>
-              <Button block dark onPress={() => this.login()}><Text> Login</Text></Button>
+            <View >
+              <TextInput style={styles.inputFilds} placeholder='passoword' secureTextEntry={true} value={password} onChangeText={password => this.setState({ 'password': password })} />
+            </View>
+              
+            <View>
+              <TouchableOpacity style={styles.loginButton} onPress={() => this.login()} >
+              <Button color="#841584" title="Login" />
+              </TouchableOpacity>
             </View>
 
 
-          </Form>
+          </View>
         </View>
-      </LinearGradient>
+
     )
   }
 }
@@ -150,30 +152,33 @@ class Login extends Component {
 
 
 const styles = StyleSheet.create({
-  linearGradient: {
-    flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5
-  },
   content: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    flex: 1,
+    marginLeft:5,
+    marginRight:5,
+    position: 'relative',
+    justifyContent: 'center',
+  },
+
+  inputFilds:{
+    paddingHorizontal: 10,
+    borderBottomWidth:1,
+    marginLeft: 5,
+    marginRight: 5,
+    borderColor: '#ccc',
   },
 
   loginButton: {
-    marginTop: 100,
+    height: 20,
+    marginTop:20,
   },
 
   lable: {
+    marginTop:5,
     color: '#AAAAAA',
   },
   errorFiles: {
     marginTop: 10,
-    marginLeft: 10,
     textAlign: 'left',
     fontSize: 12,
     color: '#FF4136',

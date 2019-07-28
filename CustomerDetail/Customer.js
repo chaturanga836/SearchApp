@@ -25,11 +25,11 @@ class Customer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors:{
-                title:'',
+            formErrors: {
+                title: '',
                 district: '',
                 city: '',
-                description:'',
+                description: '',
                 Address: '',
                 OwnerName: '',
                 OwnerID: '',
@@ -38,22 +38,22 @@ class Customer extends Component {
                 contact_no: '',
                 price_id: ''
             },
-   
+
             modalVisible: false,
-            latitude: '10000',
-            longtitude: '10000',
+            latitude: null,
+            longtitude: null,
             category: undefined,
             subCategory: undefined,
             district: undefined,
             city: undefined,
             id: undefined,
-            name: 'Name',
-            address: '503/A',
-            mobile1: '0757225338',
-            owner: 'Buddhika',
-            title: 'Title1',
+            name: null,
+            address: null,
+            mobile1: null,
+            owner: null,
+            title: null,
             price: undefined,
-            descript: 'Descript',
+            descript: null,
             categories: [],
             subCategories: [],
             districts: [],
@@ -64,47 +64,47 @@ class Customer extends Component {
 
     showAlert = (message) => {
         Alert.alert(
-          message
+            message
         )
-      }
+    }
 
     componentDidMount = () => {
         const { baseurl, api_token } = this.props;
 
         this.setState({ 'modalVisible': true });
 
-        axios.get(baseurl+'/get-meta',{
+        axios.get(baseurl + '/get-meta', {
             headers: {
-              'Authorization': 'Bearer ' + api_token 
+                'Authorization': 'Bearer ' + api_token
             }
-           })
-        .then(response => {
+        })
+            .then(response => {
 
-            this.setState({
-                prices:response.data.data.prices,
-                categories:response.data.data.categories,
-                subCategories:response.data.data.subCategories,
-                districts:response.data.data.district,
-                cities:response.data.data.cities,
-                'modalVisible': false
-            });
-            
-          })
-          .catch( error => {
-            this.setState({ 'modalVisible': false });
-            if(error.response === undefined){
-                this.showAlert("Network Error");
-              }else{
-                if(error.response.status == 400){
-                  this.showAlert("invalid credentials");
-                }else if(error.response.status == 401){
-                    this.showAlert("Authentication failed");
-                    navigate('Login');
-                }else{
-                  this.showAlert("Something went wrong!");
+                this.setState({
+                    prices: response.data.data.prices,
+                    categories: response.data.data.categories,
+                    subCategories: response.data.data.subCategories,
+                    districts: response.data.data.district,
+                    cities: response.data.data.cities,
+                    'modalVisible': false
+                });
+
+            })
+            .catch(error => {
+                this.setState({ 'modalVisible': false });
+                if (error.response === undefined) {
+                    this.showAlert("Network Error");
+                } else {
+                    if (error.response.status == 400) {
+                        this.showAlert("invalid credentials");
+                    } else if (error.response.status == 401) {
+                        this.showAlert("Authentication failed");
+                        navigate('Login');
+                    } else {
+                        this.showAlert("Something went wrong!");
+                    }
                 }
-              }
-          });
+            });
     }
 
     onchangeSim = (value) => {
@@ -119,42 +119,42 @@ class Customer extends Component {
         });
     }
 
- 
+
 
     addAvertiesment = () => {
-        
+
         const { baseurl, api_token, setFormData } = this.props;
-        const { city, district, address, 
-            category, mobile1, price, 
-            subCategory, owner, descript, 
-            title, longtitude, latitude 
+        const { city, district, address,
+            category, mobile1, price,
+            subCategory, owner, descript,
+            title, longtitude, latitude
         } = this.state;
-            
-    
+
+
         let config = {
             headers: {
                 'Authorization': 'Bearer ' + api_token
             }
         }
 
-        
+
         let _formErrors = {
-            'title':'',
+            'title': '',
             'district': '',
             'city': '',
-            'description':'',
-           'Address': '',
+            'description': '',
+            'Address': '',
             'OwnerName': '',
-           'OwnerID': '',
+            'OwnerID': '',
             'latitude': '',
             'longitude': '',
             'contact_no': '',
             'price_id': ''
         };
 
-       
 
-        const postData ={
+
+        const postData = {
             "id": "",
             "title": title,
             "district": district,
@@ -170,13 +170,13 @@ class Customer extends Component {
             "contact_no": mobile1,
             "price_id": price
         };
-     
+
         this.setState({ 'modalVisible': true });
 
 
-        axios.post(baseurl+'/add-advertisement',postData ,config)
-            .then( response => {
-                this.setState({ 
+        axios.post(baseurl + '/add-advertisement', postData, config)
+            .then(response => {
+                this.setState({
                     'modalVisible': false,
                     'latitude': '',
                     'longtitude': '',
@@ -192,14 +192,14 @@ class Customer extends Component {
                     'title': '',
                     'price': undefined,
                     'descript': '',
-                    'modalVisible': false 
+                    'modalVisible': false
                 });
                 this.showAlert("Successfully Added");
                 setFormData({
-                    'id':response.data.data.id,
-                    'number_of_photos':response.data.data.number_of_photos,
+                    'id': response.data.data.id,
+                    'number_of_photos': response.data.data.number_of_photos,
                 });
-                
+
             })
             .catch(error => {
                 this.setState({ 'modalVisible': false });
@@ -208,13 +208,13 @@ class Customer extends Component {
                 } else {
                     if (error.response.status == 401) {
                         this.showAlert("unauthorised");
-                    }else if (error.response.status == 400) {
+                    } else if (error.response.status == 400) {
 
-                        for(var i in error.response.data.errors){
+                        for (var i in error.response.data.errors) {
                             _formErrors[i] = error.response.data.errors[i][0];
                         }
-   
-                        this.setState({'formErrors':_formErrors});
+
+                        this.setState({ 'formErrors': _formErrors });
                         this.showAlert("invalid credentials");
                     } else {
                         this.showAlert("Internal Error!");
@@ -254,7 +254,7 @@ class Customer extends Component {
         });
     }
 
-    viewImages = () =>{
+    viewImages = () => {
         const { navigate } = this.props.navigation;
         navigate('ImageUpload');
 
@@ -262,7 +262,7 @@ class Customer extends Component {
 
     render() {
         const { category, city, subCategory,
-            id, name, mobile1,address,
+            id, name, mobile1, address,
             district, price,
             owner, descript, modalVisible,
             title, longtitude, latitude,
@@ -273,10 +273,10 @@ class Customer extends Component {
             prices,
         } = this.state;
 
-        
+
         return (
             <Content>
-                <Loader visible={modalVisible}/>
+                <Loader visible={modalVisible} />
 
                 <Form>
                     <FormItem floatingLabel>
@@ -284,7 +284,7 @@ class Customer extends Component {
                         <Input placeholder='' value={title} onChangeText={title => this.setState({ 'title': title })} />
                     </FormItem>
                     <Text style={styles.errorFiles}>{formErrors.title}</Text>
-                    
+
                     <FormItem picker>
                         <Picker
                             mode="dropdown"
@@ -384,10 +384,10 @@ class Customer extends Component {
 
                     <FormItem floatingLabel>
                         <Label>Description</Label>
-                        <Input placeholder='' value={descript}  onChangeText={descript => this.setState({ 'descript': descript })}/>
+                        <Input placeholder='' value={descript} onChangeText={descript => this.setState({ 'descript': descript })} />
                     </FormItem>
                     <Text style={styles.errorFiles}>{formErrors.description}</Text>
-      
+
 
                     <FormItem floatingLabel>
                         <Label>Longtitude</Label>
@@ -400,13 +400,13 @@ class Customer extends Component {
                         <Input placeholder='' value={latitude} onChangeText={latitude => this.setState({ 'latitude': latitude })} />
                     </FormItem>
                     <Text style={styles.errorFiles}>{formErrors.latitude}</Text>
-                   
-                    <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-around',}}>
+
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', }}>
                         <Button primary onPress={() => this.addAvertiesment()}><Text> Submit </Text></Button>
                         <Button primary onPress={() => this.viewImages()}><Text>Images</Text></Button>
-                        
+
                     </View>
-              
+
 
                 </Form>
             </Content>
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
         textAlign: 'left',
         fontSize: 12,
         color: '#FF4136',
-      },
+    },
 })
 
 const mapStateToProps = state => ({
@@ -435,4 +435,4 @@ const EventAction = dispatch => ({
 
 });
 
-export default connect(mapStateToProps,EventAction)(Customer);
+export default connect(mapStateToProps, EventAction)(Customer);

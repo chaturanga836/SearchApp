@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 
 const INITIAL_STATE = {
     base_url:'http://demoadminpane.searchappsl.com/api',
-    api_token: 'b8ec501711e0453b611c1b8b3faabc7c6e9c31ac4d0d0166f29ec266160dc83a',
+    api_token: '',
     user_id : 3,
     username: null,
     password: null,
@@ -13,8 +13,8 @@ const INITIAL_STATE = {
     districts: [],
     prices: [],
     formdata:{
-      'id':76,
-      'number_of_photos':5
+      'id':null,
+      'number_of_photos':0
     }
 }
 

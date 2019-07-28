@@ -22,15 +22,20 @@ const store = createStore(reducers);
 
 const AppNavigator = createStackNavigator({
 
-  ImageUpload: {
-    screen: ImageUpload
-  },
+
   Login:{
-    screen: Login
+    screen: Login,
+    navigationOptions: {
+      header: null,
+    }
   },
 
   Customer: {
     screen: Customer
+  },
+
+  ImageUpload: {
+    screen: ImageUpload
   },
 
 
