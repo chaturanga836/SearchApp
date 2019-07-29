@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import { Alert, 
+import {
+  Alert,
   StyleSheet,
-   View, 
-   Button,
-   Modal ,
-   Text,
-   TextInput,
-   TouchableOpacity,
+  View,
+  Text,
+  TouchableOpacity,
 
-  } from 'react-native';
+} from 'react-native';
+
 
 //import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
-//import { AsyncStorage } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input } from 'react-native-elements'
 import axios from 'axios';
 import Loader from './../Component/Loader';
+
 
 class Login extends Component {
 
@@ -46,8 +47,8 @@ class Login extends Component {
     try {
       //const value = await AsyncStorage.getItem('credentials');
       //if (value !== null) {
-        // We have data!!
-        navigate('Customer')
+      // We have data!!
+      navigate('Customer')
 
       //}
     } catch (error) {
@@ -56,12 +57,14 @@ class Login extends Component {
   };
 
   login = () => {
+
     const { navigate } = this.props.navigation;
     const { baseurl } = this.props;
 
     const { username, password } = this.state;
     const { setEventData } = this.props;
     this.setState({ 'modalVisible': true });
+
 
     axios.post(baseurl + '/user/login', {
       'email': username,
@@ -77,23 +80,23 @@ class Login extends Component {
             'password': password,
             'api_token': response.data.data.api_token
           });
-            //this.storeData()
+          //this.storeData()
           this.setState({ 'modalVisible': false });
           navigate('Customer');
         }
       })
       .catch(error => {
-        if(error.response === undefined){
+        if (error.response === undefined) {
           this.showAlert("Network Error");
-        }else{
-          if(error.response.status == 400){
+        } else {
+          if (error.response.status == 400) {
             this.showAlert("invalid credentials");
-          }else{
+          } else {
             this.showAlert("Something went wrong!");
           }
         }
-       
-        this.setState({ 'modalVisible': false});
+
+        this.setState({ 'modalVisible': false });
 
       });
     //
@@ -114,36 +117,64 @@ class Login extends Component {
 
 
   render() {
-    const { username, password, modalVisible} = this.state;
+    const { username, password, modalVisible } = this.state;
 
     return (
-      
-        <View style={styles.content}>
 
-          <Loader visible={modalVisible}/>
-          <View>
-
+      <View style={styles.content}>
+          
+        <View>
+        <Loader visible={modalVisible} />
+          <View style={styles.inputFiled}>
+            <Input
+              inputContainerStyle={styles.inputContainerStyle}
+              inputStyle={styles.inputFieldPassword}
+              placeholder='email'
+              keyboardType='email-address'
+              value={username}
+              textAlign={'left'}
+              onChangeText={username => this.setState({ 'username': username })}
+              leftIcon={
+                <View style={styles.iconContainerStyle}>
+                  <Icon
+                    name='envelope'
+                    size={24}
+                    color='#000080'
+                  /></View>}
+            />
           </View>
 
-          <View>
-            <View>
-              <TextInput style={styles.inputFilds} placeholder='username' value={username} onChangeText={username => this.setState({ 'username': username })} />
-            </View>
-            
 
-            <View >
-              <TextInput style={styles.inputFilds} placeholder='passoword' secureTextEntry={true} value={password} onChangeText={password => this.setState({ 'password': password })} />
-            </View>
-              
-            <View>
-              <TouchableOpacity style={styles.loginButton} onPress={() => this.login()} >
-              <Button color="#841584" title="Login" />
-              </TouchableOpacity>
-            </View>
-
-
+          <View style={styles.inputFiled}>
+            <Input
+              inputContainerStyle={styles.inputContainerStyle}
+              inputContaininputStyleerStyle={styles.inputFieldPassword}
+              placeholder='passoword'
+              textAlign={'left'}
+              secureTextEntry={true}
+              value={password}
+              onChangeText={password => this.setState({ 'password': password })}
+              leftIcon={
+                <View style={styles.iconContainerStyle}>
+                  <Icon
+                    name='lock'
+                    size={24}
+                    color='#000080'
+                  />
+                </View>}
+            />
           </View>
+
+          <View style={styles.loginButtonContainer}>
+            <TouchableOpacity onPress={() => this.login()}>
+              <Text style={styles.loginButtonText}> Login</Text>
+            </TouchableOpacity>
+          </View>
+
+
         </View>
+
+      </View>
 
     )
   }
@@ -154,27 +185,61 @@ class Login extends Component {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    marginLeft:5,
-    marginRight:5,
+    marginLeft: 5,
+    marginRight: 5,
     position: 'relative',
     justifyContent: 'center',
   },
 
-  inputFilds:{
-    paddingHorizontal: 10,
-    borderBottomWidth:1,
-    marginLeft: 5,
-    marginRight: 5,
-    borderColor: '#ccc',
+  iconContainerStyle: {
+    width: 40,
+
+  },
+  inputFiled: {
+    borderRadius: 10,
+    borderWidth: 0.5,
+    borderColor: '#000080',
+    marginBottom: 15,
+    marginLeft: 10,
+    marginRight: 10,
   },
 
-  loginButton: {
-    height: 20,
-    marginTop:20,
+  inputContainerStyle: {
+    borderBottomWidth: 0,
+    height: 50,
+  },
+  inputFieldsUsername: {
+    marginLeft: 10,
+    marginRight: 10,
+  },
+
+
+  inputFieldPassword: {
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+
+  },
+
+  loginButtonContainer: {
+    height: 45,
+    marginTop: 10,
+    marginLeft: 10,
+    marginRight: 10,
+    borderRadius: 10,
+    backgroundColor: '#000080',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  loginButtonText: {
+    color: '#FFF',
+    textAlign: 'center',
+    fontSize: 18
   },
 
   lable: {
-    marginTop:5,
+    marginTop: 5,
     color: '#AAAAAA',
   },
   errorFiles: {

@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, StyleSheet, View, Modal } from 'react-native';
+import { Alert, Button, StyleSheet, View, Modal, TouchableOpacity } from 'react-native';
 import {
-    Form,
     Content,
-    Input,
-    Item as FormItem,
-    Button,
-    Label,
     Text,
     Picker,
-    Textarea,
     Spinner,
 } from 'native-base';
 import Loader from './../Component/Loader';
@@ -17,7 +11,8 @@ import Loader from './../Component/Loader';
 import axios from 'axios';
 
 import { connect } from 'react-redux';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Input } from 'react-native-elements';
 
 
 class Customer extends Component {
@@ -98,8 +93,8 @@ class Customer extends Component {
                     if (error.response.status == 400) {
                         this.showAlert("invalid credentials");
                     } else if (error.response.status == 401) {
-                        this.showAlert("Authentication failed");
-                        navigate('Login');
+                        //this.showAlert("Authentication failed");
+                        //navigate('Login');
                     } else {
                         this.showAlert("Something went wrong!");
                     }
@@ -275,17 +270,23 @@ class Customer extends Component {
 
 
         return (
-            <Content>
+            <Content style={styles.containerStyle}>
                 <Loader visible={modalVisible} />
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
 
-                <Form>
-                    <FormItem floatingLabel>
-                        <Label>Title</Label>
-                        <Input placeholder='' value={title} onChangeText={title => this.setState({ 'title': title })} />
-                    </FormItem>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Title'
+                            value={title} onChangeText={title =>
+                                this.setState({ 'title': title })}
+                        />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.title}</Text>
+                </View>
 
-                    <FormItem picker>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
                         <Picker
                             mode="dropdown"
                             selectedValue={category}
@@ -295,10 +296,12 @@ class Customer extends Component {
                             })}
 
                         </Picker>
-                    </FormItem>
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.category}</Text>
+                </View>
 
-                    <FormItem picker>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
                         <Picker
                             mode="dropdown"
                             selectedValue={subCategory}
@@ -308,10 +311,12 @@ class Customer extends Component {
                             })}
 
                         </Picker>
-                    </FormItem>
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.subCategory}</Text>
+                </View>
 
-                    <FormItem picker>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
                         <Picker
                             mode="dropdown"
                             placeholder="District"
@@ -322,10 +327,12 @@ class Customer extends Component {
                             })}
 
                         </Picker>
-                    </FormItem>
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.district}</Text>
+                </View>
 
-                    <FormItem picker>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
                         <Picker
                             mode="dropdown"
                             placeholder="City"
@@ -335,10 +342,12 @@ class Customer extends Component {
                                 return (<Picker.Item key={row.id} label={row.name} value={row.id} />)
                             })}
                         </Picker>
-                    </FormItem>
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.city}</Text>
+                </View>
 
-                    <FormItem picker>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
                         <Picker
                             mode="dropdown"
                             placeholder="Price"
@@ -348,73 +357,128 @@ class Customer extends Component {
                                 return (<Picker.Item key={row.id} label={row.price.toString()} value={row.id} />)
                             })}
                         </Picker>
-                    </FormItem>
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.price}</Text>
+                </View>
 
-                    <View style={{ flexDirection: 'row' }} f>
-                        <Input disabled placeholder='ID' value={id} />
-                        <Button block dark><Text> Generate</Text></Button>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='NIC' value={id}
+                        />
                     </View>
                     <Text style={styles.errorFiles}>{formErrors.OwnerID}</Text>
+                </View>
 
-                    <FormItem floatingLabel>
-                        <Label>Name</Label>
-                        <Input placeholder='' value={name} onChangeText={name => this.setState({ 'name': name })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input placeholder='Name'
+                            inputContainerStyle={styles.inputContainerStyle}
+
+                            value={name}
+                            onChangeText={name =>
+                                this.setState({ 'name': name })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.name}</Text>
+                </View>
 
-
-                    <FormItem floatingLabel>
-                        <Label>Address </Label>
-                        <Input placeholder='' value={address} onChangeText={address => this.setState({ 'address': address })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Address'
+                            value={address}
+                            onChangeText={address => this.setState({ 'address': address })}
+                        />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.address}</Text>
+                </View>
 
-                    <FormItem floatingLabel>
-                        <Label>Mobile No </Label>
-                        <Input placeholder='' value={mobile1} onChangeText={mobile1 => this.setState({ 'mobile1': mobile1 })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Mobile No'
+                            value={mobile1}
+                            keyboardType='phone-pad'
+                            onChangeText={mobile1 => this.setState({ 'mobile1': mobile1 })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.contact_no}</Text>
+                </View>
 
-                    <FormItem floatingLabel>
-                        <Label>Owner Name</Label>
-                        <Input placeholder='' value={owner} onChangeText={owner => this.setState({ 'owner': owner })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Owner Name'
+                            value={owner}
+                            onChangeText={owner => this.setState({ 'owner': owner })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.OwnerName}</Text>
+                </View>
 
-                    <FormItem floatingLabel>
-                        <Label>Description</Label>
-                        <Input placeholder='' value={descript} onChangeText={descript => this.setState({ 'descript': descript })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Description'
+                            value={descript}
+                            multiline={true}
+                            onChangeText={descript => this.setState({ 'descript': descript })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.description}</Text>
+                </View>
 
-
-                    <FormItem floatingLabel>
-                        <Label>Longtitude</Label>
-                        <Input placeholder='' value={longtitude} onChangeText={longtitude => this.setState({ 'longtitude': longtitude })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Longtitude'
+                            value={longtitude}
+                            keyboardType='numeric'
+                            onChangeText={longtitude => this.setState({ 'longtitude': longtitude })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.longitude}</Text>
+                </View>
 
-                    <FormItem floatingLabel>
-                        <Label>Latitude</Label>
-                        <Input placeholder='' value={latitude} onChangeText={latitude => this.setState({ 'latitude': latitude })} />
-                    </FormItem>
+                <View style={styles.inputGroupStyle}>
+                    <View style={styles.inputFiled}>
+                        <Input
+                            inputContainerStyle={styles.inputContainerStyle}
+                            placeholder='Latitude'
+                            keyboardType='numeric'
+                            value={latitude}
+                            onChangeText={latitude => this.setState({ 'latitude': latitude })} />
+                    </View>
                     <Text style={styles.errorFiles}>{formErrors.latitude}</Text>
+                </View>
 
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-around', }}>
-                        <Button primary onPress={() => this.addAvertiesment()}><Text> Submit </Text></Button>
-                        <Button primary onPress={() => this.viewImages()}><Text>Images</Text></Button>
-
+                <View style={styles.buttonContainer}>
+                    <View style={styles.buttonsStyle}>
+                        <TouchableOpacity onPress={() => this.addAvertiesment()}>
+                            <Text style={styles.buttonTextStyle}>Add new</Text>
+                        </TouchableOpacity>
                     </View>
 
+                    <View style={styles.buttonsStyle}>
+                        <TouchableOpacity onPress={() => this.viewImages()}>
+                            <Text style={styles.buttonTextStyle}>Images</Text>
+                        </TouchableOpacity>
+                    </View>
 
-                </Form>
+                </View>
+
             </Content>
         )
     }
 }
 
 const styles = StyleSheet.create({
+    containerStyle:{
+        marginTop: 10
+    },
     errorFiles: {
         marginTop: 10,
         marginLeft: 10,
@@ -422,6 +486,50 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#FF4136',
     },
+
+    inputGroupStyle: {
+        marginBottom: 15
+    },
+
+    inputFiled: {
+        borderRadius: 10,
+        borderWidth: 0.5,
+        borderColor: '#000080',
+        marginLeft: 10,
+        marginRight: 10,
+    },
+
+    inputContainerStyle: {
+        borderBottomWidth: 0,
+        height: 50,
+    },
+
+    buttonContainer: {
+        justifyContent: 'space-between',
+        flexDirection: 'row',
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 20
+    },
+    buttonsStyle: {
+        height: 45,
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        backgroundColor: '#000080',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+
+    buttonTextStyle: {
+        color: '#FFF',
+        textAlign: 'center',
+        fontSize: 18
+    }
+
 })
 
 const mapStateToProps = state => ({

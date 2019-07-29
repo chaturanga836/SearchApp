@@ -29,10 +29,10 @@ const AppNavigator = createStackNavigator({
       header: null,
     }
   },
-
   Customer: {
     screen: Customer
   },
+
 
   ImageUpload: {
     screen: ImageUpload
